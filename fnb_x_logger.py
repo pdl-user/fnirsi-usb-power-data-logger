@@ -118,6 +118,21 @@ energy = 0.0
 capacity = 0.0
 
 
+def bytes2int(barr, offset, nb, bige=0):
+    if bige:
+        begin = offset
+        stop = offset + nb
+        step = 1
+    else:
+        begin = offset + nb
+        stop = offset - 1
+        step = -1
+    val = 0
+    for ndx in range(begin, stop, step):
+        val += 256*val + barr[ndx]
+    return val
+
+
 def decode(data, calculate_crc, time_interval, alpha):
     global energy
     global capacity
@@ -218,6 +233,7 @@ def main():
     parser.add_argument("--crc", type=str2bool, help="Enable CRC checks", default=False)
     parser.add_argument("--verbose", type=str2bool, help="Show some extra initalization information", default=False)
     parser.add_argument("--alpha", type=float, help="Set temperature smoothing factor", default=0.9)
+    parser.add_argument("--num_rows", type=int, help="Set number of readings", default=0)
     args = parser.parse_args()
 
     crc_calculator = None
